@@ -5,6 +5,7 @@ public class PlayerMove : MonoBehaviour
 {
     public float moveSpeed;
     public Transform movePoint;
+    public Transform futureMovePoint;
     public LayerMask movementStopper;
 
     private float _horizontalMovement;
@@ -54,6 +55,7 @@ public class PlayerMove : MonoBehaviour
                     _horizontalMovement = horizontalInput;
                     _verticalMovement = 0;
                     movePoint.position = newPosition;
+                    futureMovePoint.position = newPosition + new Vector3(horizontalInput * 8, 0f, 0f);
                 }
             }
         }
@@ -79,6 +81,7 @@ public class PlayerMove : MonoBehaviour
                     _verticalMovement = verticalInput;
                     _horizontalMovement = 0;
                     movePoint.position = newPosition;
+                    futureMovePoint.position = newPosition + new Vector3(0f, verticalInput * 8, 0f);
                 }
             }
         }
