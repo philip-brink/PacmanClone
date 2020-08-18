@@ -12,6 +12,7 @@ namespace Enemy
         public Transform cornerPoint;
         public LayerMask movementStopper;
         public float moveSpeed;
+        public Animator animator;
 
         public MovementMode MovementMode
         {
@@ -33,11 +34,15 @@ namespace Enemy
         private int _verticalMovement;
         private int _horizontalMovement;
         private readonly Random _random = new Random();
+        private int _animatorHorizontalId;
+        private int _animatorVerticalId;
 
         private void Start()
         {
             // don't have the movePoint as a child of the player itself
             movePoint.parent = null;
+            _animatorHorizontalId = Animator.StringToHash("Horizontal");
+            _animatorVerticalId = Animator.StringToHash("Vertical");
         }
 
         private void FixedUpdate()
@@ -140,6 +145,9 @@ namespace Enemy
             {
                 _verticalMovement = -1;
             }
+            
+            animator.SetInteger(_animatorHorizontalId, _horizontalMovement);
+            animator.SetInteger(_animatorVerticalId, _verticalMovement);
         }
 
         private Vector3 GetFrightenedTarget()
