@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Enemy
+namespace PacMan.CharacterMovement.Enemy
 {
     public static class Pathfinding
     {

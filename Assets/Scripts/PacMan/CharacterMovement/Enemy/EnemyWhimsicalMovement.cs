@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace Enemy
+namespace PacMan.CharacterMovement.Enemy
 {
     public class EnemyWhimsicalMovement : EnemyMovement
     {

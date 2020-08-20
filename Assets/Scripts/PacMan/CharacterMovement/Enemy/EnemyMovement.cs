@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 
-namespace Enemy
+namespace PacMan.CharacterMovement.Enemy
 {
     public abstract class EnemyMovement : MonoBehaviour
     {
@@ -22,7 +23,7 @@ namespace Enemy
                 _movementMode = value;
 
                 // reverse movement
-                if (_movementMode == MovementMode.Frightened)
+                if (_movementMode == MovementMode.Flee)
                 {
                     ReverseMovement();
                 }
@@ -109,7 +110,7 @@ namespace Enemy
                     return GetChaseTarget();
                 case MovementMode.Scatter:
                     return cornerPoint.position;
-                case MovementMode.Frightened:
+                case MovementMode.Flee:
                     return GetFrightenedTarget();
                 default:
                     return GetChaseTarget();
@@ -145,7 +146,7 @@ namespace Enemy
             {
                 _verticalMovement = -1;
             }
-            
+
             animator.SetInteger(_animatorHorizontalId, _horizontalMovement);
             animator.SetInteger(_animatorVerticalId, _verticalMovement);
         }
@@ -231,7 +232,7 @@ namespace Enemy
             this.Down = down;
 
             var corner = left != Vector3.zero && up != Vector3.zero || left != Vector3.zero && down != Vector3.zero ||
-                          right != Vector3.zero && up != Vector3.zero || right != Vector3.zero && down != Vector3.zero;
+                         right != Vector3.zero && up != Vector3.zero || right != Vector3.zero && down != Vector3.zero;
             HasIntersection = corner;
         }
     }
@@ -240,6 +241,6 @@ namespace Enemy
     {
         Chase,
         Scatter,
-        Frightened,
+        Flee,
     }
 }

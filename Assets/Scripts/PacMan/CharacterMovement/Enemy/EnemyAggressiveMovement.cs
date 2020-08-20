@@ -1,20 +1,15 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace Enemy
+namespace PacMan.CharacterMovement.Enemy
 {
-    public class EnemyPincerMovement : EnemyMovement
+    public class EnemyAggressiveMovement : EnemyMovement
     {
         protected override Vector3 GetChaseTarget()
         {
             var movePointPosition = movePoint.position;
-
-            var position = playerPoint.position;
-            var playerChange = (playerFuturePoint.position - position) * 4;
-
             var path = Pathfinding.GetPath(Vector3Int.RoundToInt(movePointPosition),
-                Vector3Int.RoundToInt(position + playerChange), movementStopper,
-                Vector3Int.RoundToInt(PreviousPosition));
+                Vector3Int.RoundToInt(playerPoint.position), movementStopper, Vector3Int.RoundToInt(PreviousPosition));
 
             if (path.Count > 1)
             {
@@ -22,7 +17,7 @@ namespace Enemy
             }
             else
             {
-                return movePointPosition;
+                return movePoint.position;
             }
         }
     }
