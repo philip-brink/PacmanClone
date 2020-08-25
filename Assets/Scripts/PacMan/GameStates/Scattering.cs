@@ -24,8 +24,6 @@ namespace PacMan.GameStates
 
         public void OnEnter()
         {
-            Debug.Log("Started Scattering");
-            
             _timeLeft = _scatterTimes[_roundNumber < _scatterTimes.Length ? _roundNumber : _scatterTimes.Length - 1];
             
             foreach (var enemy in _enemies)

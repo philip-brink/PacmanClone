@@ -23,8 +23,6 @@ namespace PacMan.GameStates
 
         public void OnEnter()
         {
-            Debug.Log("Started Chasing");
-            
             _timeLeft = _chaseTimes[_roundNumber < _chaseTimes.Length ? _roundNumber : _chaseTimes.Length - 1];
             
             foreach (var enemy in _enemies)
@@ -36,7 +34,6 @@ namespace PacMan.GameStates
         public void OnExit()
         {
             _roundNumber++;
-            Debug.Log("OnExit");
         }
     }
 }

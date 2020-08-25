@@ -25,8 +25,6 @@ namespace PacMan.GameStates
 
         public void OnEnter()
         {
-            Debug.Log("Started Fleeing");
-            
             _timeLeft = _fleeingTimes[_roundNumber < _fleeingTimes.Length ? _roundNumber : _fleeingTimes.Length - 1];
             
             foreach (var enemy in _enemies)

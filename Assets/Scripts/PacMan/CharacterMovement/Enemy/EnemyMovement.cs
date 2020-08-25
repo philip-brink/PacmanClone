@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
@@ -109,7 +109,7 @@ namespace PacMan.CharacterMovement.Enemy
                 case MovementMode.Chase:
                     return GetChaseTarget();
                 case MovementMode.Scatter:
-                    return cornerPoint.position;
+                    return GetScatterTarget();
                 case MovementMode.Flee:
                     return GetFrightenedTarget();
                 default:
@@ -149,6 +149,16 @@ namespace PacMan.CharacterMovement.Enemy
 
             animator.SetInteger(_animatorHorizontalId, _horizontalMovement);
             animator.SetInteger(_animatorVerticalId, _verticalMovement);
+        }
+        
+        private Vector3 GetScatterTarget()
+        {
+            var position = movePoint.position;
+            var movePointPosition = position;
+            var path = Pathfinding.GetPath(Vector3Int.RoundToInt(movePointPosition),
+                Vector3Int.RoundToInt(cornerPoint.position), movementStopper, Vector3Int.RoundToInt(PreviousPosition));
+
+            return path.Count > 1 ? path.ElementAt(1) : position;
         }
 
         private Vector3 GetFrightenedTarget()
