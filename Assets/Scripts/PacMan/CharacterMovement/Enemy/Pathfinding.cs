@@ -8,7 +8,7 @@ namespace PacMan.CharacterMovement.Enemy
 {
     public static class Pathfinding
     {
-        public static List<Vector3Int> GetPath(Vector3Int currentPosition, Vector3Int targetPosition, LayerMask movementStopper, Vector3Int bannedNode)
+        public static List<Vector3Int> GetPath(Vector3Int currentPosition, Vector3Int targetPosition, LayerMask movementLayer, Vector3Int bannedNode)
         {
             int cutoff = 0;
             
@@ -29,7 +29,7 @@ namespace PacMan.CharacterMovement.Enemy
                     break;
                 }
 
-                var successors = GetConnectedNodes(current.Key, movementStopper, bannedNode);
+                var successors = GetConnectedNodes(current.Key, movementLayer, bannedNode);
                 foreach (var next in successors)
                 {
                     var newCost = costSoFar[current.Key] + 1;
@@ -58,7 +58,7 @@ namespace PacMan.CharacterMovement.Enemy
             return pathList;
         }
 
-        private static List<Vector3Int> GetConnectedNodes(Vector3Int currentNode, LayerMask movementStopper, Vector3Int bannedNode)
+        private static List<Vector3Int> GetConnectedNodes(Vector3Int currentNode, LayerMask movementLayer, Vector3Int bannedNode)
         {
             var allNodes = new List<Vector3Int>();
             allNodes.Add(currentNode + Vector3Int.left);
@@ -69,7 +69,7 @@ namespace PacMan.CharacterMovement.Enemy
             var validNodes = new List<Vector3Int>();
             foreach (var node in allNodes)
             {
-                if (node != bannedNode && !Physics2D.OverlapCircle(new Vector3(node.x, node.y, node.z), 0.2f, movementStopper))
+                if (node != bannedNode && Physics2D.OverlapCircle(new Vector3(node.x, node.y, node.z), 0.2f, movementLayer))
                 {
                     validNodes.Add(node);
                 }
@@ -86,13 +86,13 @@ namespace PacMan.CharacterMovement.Enemy
 
     public class PriorityQueue
     {
-        private List<KeyValuePair<Vector3Int, float>> elements = new List<KeyValuePair<Vector3Int, float>>();
+        private readonly List<KeyValuePair<Vector3Int, float>> _elements = new List<KeyValuePair<Vector3Int, float>>();
 
-        public int Count => elements.Count;
+        public int Count => _elements.Count;
 
         public void Enqueue(Vector3Int item, float priority)
         {
-            elements.Add(new KeyValuePair<Vector3Int, float>(item, priority));
+            _elements.Add(new KeyValuePair<Vector3Int, float>(item, priority));
         }
 
         // Returns the Location that has the lowest priority
@@ -100,22 +100,22 @@ namespace PacMan.CharacterMovement.Enemy
         {
             var bestIndex = 0;
 
-            for (var i = 0; i < elements.Count; i++)
+            for (var i = 0; i < _elements.Count; i++)
             {
-                if (elements[i].Value < elements[bestIndex].Value)
+                if (_elements[i].Value < _elements[bestIndex].Value)
                 {
                     bestIndex = i;
                 }
             }
 
-            var bestItem = elements[bestIndex];
-            elements.RemoveAt(bestIndex);
+            var bestItem = _elements[bestIndex];
+            _elements.RemoveAt(bestIndex);
             return bestItem;
         }
 
         public float AtSamePosition(Vector3Int element)
         {
-            foreach (var e in elements)
+            foreach (var e in _elements)
             {
                 if (Vector3.Distance(e.Key, element) < 0.2f)
                 {
@@ -126,12 +126,12 @@ namespace PacMan.CharacterMovement.Enemy
             return -1f;
         }
 
-        public List<Vector3Int> Keys => elements.Select((e) => e.Key).ToList();
+        public List<Vector3Int> Keys => _elements.Select((e) => e.Key).ToList();
 
         public override string ToString()
         {
             var sb = new StringBuilder();
-            foreach (var e in elements)
+            foreach (var e in _elements)
             {
                 var key = e.Key;
                 sb.Append($"({key.x}, {key.y}), {e.Value} ");

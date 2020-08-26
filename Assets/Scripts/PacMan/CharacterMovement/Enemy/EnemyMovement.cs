@@ -11,7 +11,7 @@ namespace PacMan.CharacterMovement.Enemy
         public Transform playerFuturePoint;
         public Transform movePoint;
         public Transform cornerPoint;
-        public LayerMask movementStopper;
+        public LayerMask movementLayer;
         public float moveSpeed;
         public Animator animator;
 
@@ -81,8 +81,8 @@ namespace PacMan.CharacterMovement.Enemy
                     else
                     {
                         var newDirection = movePoint.position + new Vector3(_horizontalMovement, _verticalMovement, 0f);
-                        // make sure we're not getting stuck in a dead end
-                        if (!Physics2D.OverlapCircle(newDirection, 0.2f, movementStopper))
+                        // make sure movement is possible
+                        if (Physics2D.OverlapCircle(newDirection, 0.2f, movementLayer))
                         {
                             var position = movePoint.position;
                             SetDirectionComponents(Vector3Int.RoundToInt(position),
@@ -156,7 +156,7 @@ namespace PacMan.CharacterMovement.Enemy
             var position = movePoint.position;
             var movePointPosition = position;
             var path = Pathfinding.GetPath(Vector3Int.RoundToInt(movePointPosition),
-                Vector3Int.RoundToInt(cornerPoint.position), movementStopper, Vector3Int.RoundToInt(PreviousPosition));
+                Vector3Int.RoundToInt(cornerPoint.position), movementLayer, Vector3Int.RoundToInt(PreviousPosition));
 
             return path.Count > 1 ? path.ElementAt(1) : position;
         }
@@ -180,8 +180,8 @@ namespace PacMan.CharacterMovement.Enemy
             else
             {
                 var newPosition = movePoint.position + new Vector3(_horizontalMovement, _verticalMovement, 0f);
-                // make sure we're not getting stuck in a dead end
-                if (!Physics2D.OverlapCircle(newPosition, 0.2f, movementStopper))
+                // make sure movement is possible in this direction
+                if (Physics2D.OverlapCircle(newPosition, 0.2f, movementLayer))
                 {
                     return newPosition;
                 }
@@ -210,13 +210,18 @@ namespace PacMan.CharacterMovement.Enemy
             var right = target + Vector3.right;
             var down = target + Vector3.down;
 
-            bool leftBlocked = Physics2D.OverlapCircle(left, 0.2f, movementStopper);
-            bool upBlocked = Physics2D.OverlapCircle(up, 0.2f, movementStopper);
-            bool rightBlocked = Physics2D.OverlapCircle(right, 0.2f, movementStopper);
-            bool downBlocked = Physics2D.OverlapCircle(down, 0.2f, movementStopper);
+            bool leftOpen = Physics2D.OverlapCircle(left, 10.9f, movementLayer);
+            bool upOpen = Physics2D.OverlapCircle(up, 10.9f, movementLayer);
+            bool rightOpen = Physics2D.OverlapCircle(right, 10.9f, movementLayer);
+            bool downOpen = Physics2D.OverlapCircle(down, 10.9f, movementLayer);
+            //
+            // Debug.Log($"leftOpen: {leftOpen}");
+            // Debug.Log($"rightOpen: {rightOpen}");
+            // Debug.Log($"downOpen: {downOpen}");
+            // Debug.Log($"upOpen: {upOpen}");
 
-            return new IntersectionDirections(leftBlocked ? Vector3.zero : left, upBlocked ? Vector3.zero : up,
-                rightBlocked ? Vector3.zero : right, downBlocked ? Vector3.zero : down);
+            return new IntersectionDirections(leftOpen ? left : Vector3.zero, upOpen ? up : Vector3.zero,
+                rightOpen ? right : Vector3.zero, downOpen ? down : Vector3.zero);
         }
 
         private void ReverseMovement()

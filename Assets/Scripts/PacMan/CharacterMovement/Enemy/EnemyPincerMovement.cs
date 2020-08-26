@@ -10,10 +10,10 @@ namespace PacMan.CharacterMovement.Enemy
             var movePointPosition = movePoint.position;
 
             var position = playerPoint.position;
-            var playerChange = (playerFuturePoint.position - position) * 4;
+            var playerChange = (playerFuturePoint.position - position) * 2;
 
             var path = Pathfinding.GetPath(Vector3Int.RoundToInt(movePointPosition),
-                Vector3Int.RoundToInt(position + playerChange), movementStopper,
+                Vector3Int.RoundToInt(position + playerChange), movementLayer,
                 Vector3Int.RoundToInt(PreviousPosition));
 
             if (path.Count > 1)
