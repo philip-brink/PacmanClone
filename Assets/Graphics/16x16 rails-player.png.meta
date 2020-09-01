@@ -1,79 +1,79 @@
 fileFormatVersion: 2
-guid: 1276c0b25854c2bb5a05b6415c8c0898
+guid: fa7b9f090510990cba251ce0c537589e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7376690901357878632
-    second: professor_0
+      213: -7242959945627216144
+    second: idle-right
   - first:
-      213: 4008454203820739503
-    second: professor_1
+      213: -4761908357176273901
+    second: idle-down
   - first:
-      213: 7753245406655888776
-    second: professor_2
+      213: 1384378226313022689
+    second: idle-left
   - first:
-      213: 5445282638272818166
-    second: professor_3
+      213: 1360394133829515863
+    second: idle-up
   - first:
-      213: 1719177587725441752
-    second: professor_4
+      213: 3256130789334559583
+    second: run-right-1
   - first:
-      213: 7187097117065198411
-    second: professor_5
+      213: 1609877415694817682
+    second: run-down-1
   - first:
-      213: -1562694512353238346
-    second: professor_6
+      213: 3773224251702633762
+    second: run-left-1
   - first:
-      213: -5923364897336570593
-    second: professor_7
+      213: 5425402733562657929
+    second: run-up-1
   - first:
-      213: -4693760762845270486
-    second: professor_8
+      213: 871608303597275856
+    second: run-right-2
   - first:
-      213: -2263754237413808959
-    second: professor_9
+      213: -7778473255037284246
+    second: run-down-2
   - first:
-      213: 8771474704801582534
-    second: professor_10
+      213: 3606971530152761467
+    second: run-left-2
   - first:
-      213: 6218155586279109139
-    second: professor_11
+      213: -4936748703888729978
+    second: run-up-2
   - first:
-      213: -4201085475156915601
-    second: whimsical_0
+      213: -718072733635200430
+    second: idle-right
   - first:
-      213: -5395504337516046790
-    second: whimsical_1
+      213: 955402580670854900
+    second: idle-down
   - first:
-      213: -1898896799259781252
-    second: whimsical_2
+      213: -549376177087273053
+    second: idle-left
   - first:
-      213: 1215927636779505401
-    second: whimsical_3
+      213: -2248197915716639531
+    second: idle-up
   - first:
-      213: -245628584036521178
-    second: whimsical_4
+      213: -9171571252228886434
+    second: run-right-1
   - first:
-      213: -2159932900833506990
-    second: whimsical_5
+      213: 8096274959805145234
+    second: run-down-1
   - first:
-      213: 7817634095289475552
-    second: whimsical_6
+      213: 1065909786505388823
+    second: run-left-1
   - first:
-      213: 8544567254386058943
-    second: whimsical_7
+      213: 6251414770424548734
+    second: run-up-1
   - first:
-      213: 5295067252066239290
-    second: whimsical_8
+      213: 6071734852988529268
+    second: run-right-2
   - first:
-      213: -1015075674482617533
-    second: whimsical_9
+      213: -3406577141551743915
+    second: run-down-2
   - first:
-      213: 5597857121572549698
-    second: whimsical_10
+      213: -8139504715374140632
+    second: run-up-2
   - first:
-      213: -7849770110323820862
-    second: whimsical_11
+      213: -455609333185791766
+    second: run-left-2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -118,7 +118,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 28
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -137,8 +137,8 @@ TextureImporter:
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
+    textureFormat: 4
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -149,8 +149,8 @@ TextureImporter:
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
+    textureFormat: 4
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -161,8 +161,8 @@ TextureImporter:
     buildTarget: iPhone
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
+    textureFormat: 4
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -173,8 +173,8 @@ TextureImporter:
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
+    textureFormat: 4
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -185,8 +185,8 @@ TextureImporter:
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
+    textureFormat: 4
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -197,13 +197,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: whimsical_0
+      name: idle-right
       rect:
         serializedVersion: 2
-        x: 15
-        y: 102
-        width: 18
-        height: 30
+        x: 0
+        y: 36
+        width: 16
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -211,188 +211,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f6a0836c40fb2b5c0800000000000000
-      internalID: -4201085475156915601
+      spriteID: 25ab7cc37a4e806f0800000000000000
+      internalID: -718072733635200430
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: whimsical_1
-      rect:
-        serializedVersion: 2
-        x: 47
-        y: 101
-        width: 18
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a36d64244615f15b0800000000000000
-      internalID: -5395504337516046790
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: whimsical_2
-      rect:
-        serializedVersion: 2
-        x: 79
-        y: 101
-        width: 18
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c779efefb63c5a5e0800000000000000
-      internalID: -1898896799259781252
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: whimsical_3
-      rect:
-        serializedVersion: 2
-        x: 15
-        y: 70
-        width: 18
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9f692de4eb7dfd010800000000000000
-      internalID: 1215927636779505401
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: whimsical_4
-      rect:
-        serializedVersion: 2
-        x: 47
-        y: 69
-        width: 18
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 62b22ddaa1a579cf0800000000000000
-      internalID: -245628584036521178
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: whimsical_5
-      rect:
-        serializedVersion: 2
-        x: 79
-        y: 69
-        width: 18
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 259c32378706602e0800000000000000
-      internalID: -2159932900833506990
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: whimsical_6
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 38
-        width: 17
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0e126b14ac0dd7c60800000000000000
-      internalID: 7817634095289475552
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: whimsical_7
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 37
-        width: 17
-        height: 30
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fb6ad1595a6649670800000000000000
-      internalID: 8544567254386058943
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: whimsical_8
-      rect:
-        serializedVersion: 2
-        x: 80
-        y: 38
-        width: 17
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a33463d7c9bdb7940800000000000000
-      internalID: 5295067252066239290
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: whimsical_9
+      name: idle-down
       rect:
         serializedVersion: 2
         x: 17
-        y: 7
-        width: 17
-        height: 28
+        y: 33
+        width: 15
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -400,20 +232,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 343d25a5d0ab9e1f0800000000000000
-      internalID: -1015075674482617533
+      spriteID: 4f6b06ec595424d00800000000000000
+      internalID: 955402580670854900
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: whimsical_10
+      name: idle-left
       rect:
         serializedVersion: 2
-        x: 49
-        y: 6
-        width: 17
-        height: 30
+        x: 32
+        y: 36
+        width: 16
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -421,20 +253,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 244f8b2b4659fad40800000000000000
-      internalID: 5597857121572549698
+      spriteID: 3a7a6a417493068f0800000000000000
+      internalID: -549376177087273053
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: whimsical_11
+      name: idle-up
       rect:
         serializedVersion: 2
-        x: 79
-        y: 7
-        width: 17
-        height: 29
+        x: 50
+        y: 33
+        width: 13
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -442,8 +274,176 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2c67badaca3001390800000000000000
-      internalID: -7849770110323820862
+      spriteID: 5d4afe838ebccc0e0800000000000000
+      internalID: -2248197915716639531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: run-right-1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 20
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5076b60a8808b080800000000000000
+      internalID: -9171571252228886434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: run-down-1
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 17
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29063171e2fbb5070800000000000000
+      internalID: 8096274959805145234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: run-left-1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 20
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 713244bad4fdace00800000000000000
+      internalID: 1065909786505388823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: run-up-1
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 17
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7d09cebc9c71c650800000000000000
+      internalID: 6251414770424548734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: run-right-2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47a6dbaeda2234450800000000000000
+      internalID: 6071734852988529268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: run-up-2
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 1
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 823e188169baa0f80800000000000000
+      internalID: -8139504715374140632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: run-down-2
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 2
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55cb7d9732869b0d0800000000000000
+      internalID: -3406577141551743915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: run-left-2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 4
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae8bb13b9b95da9f0800000000000000
+      internalID: -455609333185791766
       vertices: []
       indices: 
       edges: []

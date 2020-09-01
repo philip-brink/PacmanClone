@@ -1,68 +1,123 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using PacMan.Characters.Enemy.States;
 using UnityEngine;
-using Random = System.Random;
 
-namespace PacMan.CharacterMovement.Enemy
+namespace PacMan.Characters.Enemy
 {
-    public abstract class EnemyMovement : MonoBehaviour
+    public class Enemy : MonoBehaviour
     {
         public Transform playerPoint;
         public Transform playerFuturePoint;
         public Transform movePoint;
         public Transform cornerPoint;
+        public Transform startPoint;
+        public Transform startExitPoint;
+        public Transform exitPoint;
         public LayerMask movementLayer;
+        public SpriteRenderer spriteRenderer;
         public float moveSpeed;
+        public float initialWaitTime;
+        public float killedWaitTime;
         public Animator animator;
+        public EnemyType enemyType;
+        [NonSerialized] public Vector3 previousPosition;
+        [NonSerialized] public Enemy AggressiveEnemy;
 
-        public MovementMode MovementMode
+        private bool _fleeing;
+        public bool Fleeing
         {
-            get => _movementMode;
+            get => _fleeing;
             set
             {
-                _movementMode = value;
-
-                // reverse movement
-                if (_movementMode == MovementMode.Flee)
+                if (!(_stateMachine.CurrentState is Waiting))
                 {
-                    ReverseMovement();
+                    _fleeing = value;
                 }
             }
         }
 
-        protected Vector3 PreviousPosition;
-        private MovementMode _movementMode = MovementMode.Chase;
+        [NonSerialized] public bool Killed;
         private int _verticalMovement;
         private int _horizontalMovement;
-        private readonly Random _random = new Random();
         private int _animatorHorizontalId;
         private int _animatorVerticalId;
+        private StateMachine<IEnemyState> _stateMachine;
 
+        public Vector3 MovementVector
+        {
+            get
+            {
+                if (_horizontalMovement == -1) return Vector3.left;
+                if (_horizontalMovement == 1) return Vector3.right;
+                if (_verticalMovement == -1) return Vector3.down;
+                if (_verticalMovement == 1) return Vector3.up;
+
+                return Vector3.zero;
+            }
+        }
+        
         private void Start()
         {
+            AggressiveEnemy = GameObject.Find("EnemyAggressive").GetComponent<Enemy>();
+            
             // don't have the movePoint as a child of the player itself
             movePoint.parent = null;
             _animatorHorizontalId = Animator.StringToHash("Horizontal");
             _animatorVerticalId = Animator.StringToHash("Vertical");
+
+            _stateMachine = new StateMachine<IEnemyState>();
+
+            var chasing = new Chasing(this);
+            var scattering = new Scattering(this);
+            var fleeing = new Fleeing(this);
+            var killed = new Killed(this);
+            var waiting = new Waiting(this);
+
+            At(waiting, chasing, WaitTimeUp());
+            At(chasing, scattering, ChaseTimeUp());
+            At(scattering, chasing, ScatterTimeUp());
+            At(fleeing, chasing, FleeTimeUp());
+            At(killed, waiting, KilledTimeUp());
+
+            AtAny(fleeing, EnemyFleeing());
+            AtAny(killed, EnemyKilled());
+
+            _stateMachine.SetState(waiting);
+
+            void At(IEnemyState from, IEnemyState to, Func<bool> condition) => _stateMachine.AddTransition(from, to, condition);
+            void AtAny(IEnemyState to, Func<bool> condition) => _stateMachine.AddAnyTransition(to, condition);
+            Func<bool> WaitTimeUp() => () => waiting.TimeUp;
+            Func<bool> KilledTimeUp() => () => killed.ArrivedAtStartPosition;
+            Func<bool> ChaseTimeUp() => () => chasing.TimeUp;
+            Func<bool> ScatterTimeUp() => () => scattering.TimeUp;
+            Func<bool> FleeTimeUp() => () => fleeing.TimeUp;
+            Func<bool> EnemyFleeing() => () => Fleeing;
+            Func<bool> EnemyKilled() => () => Killed;
         }
 
         private void FixedUpdate()
         {
+            _stateMachine.Tick();
+            
             MoveEnemy();
         }
 
         private void MoveEnemy()
         {
+            if (_stateMachine.CurrentState is Waiting) return;
+            
             if (Vector3.Distance(transform.position, movePoint.position) <= 0.01f)
             {
                 var nextIntersection = CheckForIntersection(movePoint.position);
                 if (nextIntersection.HasIntersection)
                 {
-                    var newDirection = TargetPosition();
+                    var newDirection = _stateMachine.CurrentState.TargetPosition();
                     var position = movePoint.position;
                     SetDirectionComponents(Vector3Int.RoundToInt(position),
                         Vector3Int.RoundToInt(newDirection));
-                    PreviousPosition = position;
+                    previousPosition = position;
                     position = newDirection;
                     movePoint.position = position;
                 }
@@ -70,11 +125,11 @@ namespace PacMan.CharacterMovement.Enemy
                 {
                     if (_horizontalMovement == 0 && _verticalMovement == 0)
                     {
-                        var newDirection = GetInitialTarget();
+                        var newDirection = GetValidDirections(nextIntersection, Vector3.zero).First();
                         var position = movePoint.position;
                         SetDirectionComponents(Vector3Int.RoundToInt(position),
                             Vector3Int.RoundToInt(newDirection));
-                        PreviousPosition = position;
+                        previousPosition = position;
                         position = newDirection;
                         movePoint.position = position;
                     }
@@ -87,7 +142,7 @@ namespace PacMan.CharacterMovement.Enemy
                             var position = movePoint.position;
                             SetDirectionComponents(Vector3Int.RoundToInt(position),
                                 Vector3Int.RoundToInt(newDirection));
-                            PreviousPosition = position;
+                            previousPosition = position;
                             position = newDirection;
                             movePoint.position = position;
                         }
@@ -101,23 +156,6 @@ namespace PacMan.CharacterMovement.Enemy
 
             transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed);
         }
-
-        private Vector3 TargetPosition()
-        {
-            switch (MovementMode)
-            {
-                case MovementMode.Chase:
-                    return GetChaseTarget();
-                case MovementMode.Scatter:
-                    return GetScatterTarget();
-                case MovementMode.Flee:
-                    return GetFrightenedTarget();
-                default:
-                    return GetChaseTarget();
-            }
-        }
-
-        protected abstract Vector3 GetChaseTarget();
 
         private void SetDirectionComponents(Vector3Int a, Vector3Int b)
         {
@@ -150,75 +188,39 @@ namespace PacMan.CharacterMovement.Enemy
             animator.SetInteger(_animatorHorizontalId, _horizontalMovement);
             animator.SetInteger(_animatorVerticalId, _verticalMovement);
         }
-        
-        private Vector3 GetScatterTarget()
+
+        public List<Vector3> GetValidDirections(IntersectionDirections intersection, Vector3 movementVector)
         {
-            var position = movePoint.position;
-            var movePointPosition = position;
-            var path = Pathfinding.GetPath(Vector3Int.RoundToInt(movePointPosition),
-                Vector3Int.RoundToInt(cornerPoint.position), movementLayer, Vector3Int.RoundToInt(PreviousPosition));
-
-            return path.Count > 1 ? path.ElementAt(1) : position;
-        }
-
-        private Vector3 GetFrightenedTarget()
-        {
-            var nextIntersection = CheckForIntersection(movePoint.position);
-            if (nextIntersection.HasIntersection)
-            {
-                var validPoints = new List<Vector3>();
-                if (nextIntersection.Left != Vector3.zero && _horizontalMovement != -1)
-                    validPoints.Add(nextIntersection.Left);
-                if (nextIntersection.Up != Vector3.zero && _verticalMovement != 1) validPoints.Add(nextIntersection.Up);
-                if (nextIntersection.Right != Vector3.zero && _horizontalMovement != 1)
-                    validPoints.Add(nextIntersection.Right);
-                if (nextIntersection.Down != Vector3.zero && _verticalMovement != -1)
-                    validPoints.Add(nextIntersection.Down);
-                int randomIndex = _random.Next(validPoints.Count);
-                return validPoints[randomIndex];
-            }
-            else
-            {
-                var newPosition = movePoint.position + new Vector3(_horizontalMovement, _verticalMovement, 0f);
-                // make sure movement is possible in this direction
-                if (Physics2D.OverlapCircle(newPosition, 0.2f, movementLayer))
-                {
-                    return newPosition;
-                }
-
-                ReverseMovement();
-                return movePoint.position + new Vector3(_horizontalMovement, _verticalMovement, 0f);
-            }
-        }
-
-        private Vector3 GetInitialTarget()
-        {
-            var nextIntersection = CheckForIntersection(movePoint.position);
+            var movement = movementVector;
+            bool notMoving = movement == Vector3.zero;
             var validPoints = new List<Vector3>();
-            if (nextIntersection.Left != Vector3.zero) validPoints.Add(nextIntersection.Left);
-            if (nextIntersection.Up != Vector3.zero) validPoints.Add(nextIntersection.Up);
-            if (nextIntersection.Right != Vector3.zero) validPoints.Add(nextIntersection.Right);
-            if (nextIntersection.Down != Vector3.zero) validPoints.Add(nextIntersection.Down);
-            int randomIndex = _random.Next(validPoints.Count);
-            return validPoints[randomIndex];
+
+            if (intersection.HasIntersection)
+            {
+                if (intersection.Left != Vector3.zero && (notMoving || movement != Vector3.right))
+                    validPoints.Add(intersection.Left);
+                if (intersection.Up != Vector3.zero && (notMoving || movement != Vector3.down))
+                    validPoints.Add(intersection.Up);
+                if (intersection.Right != Vector3.zero && (notMoving || movement != Vector3.left))
+                    validPoints.Add(intersection.Right);
+                if (intersection.Down != Vector3.zero && (notMoving || movement != Vector3.up))
+                    validPoints.Add(intersection.Down);
+            }
+
+            return validPoints;
         }
 
-        private IntersectionDirections CheckForIntersection(Vector3 target)
+        public IntersectionDirections CheckForIntersection(Vector3 target)
         {
             var left = target + Vector3.left;
             var up = target + Vector3.up;
             var right = target + Vector3.right;
             var down = target + Vector3.down;
 
-            bool leftOpen = Physics2D.OverlapCircle(left, 10.9f, movementLayer);
-            bool upOpen = Physics2D.OverlapCircle(up, 10.9f, movementLayer);
-            bool rightOpen = Physics2D.OverlapCircle(right, 10.9f, movementLayer);
-            bool downOpen = Physics2D.OverlapCircle(down, 10.9f, movementLayer);
-            //
-            // Debug.Log($"leftOpen: {leftOpen}");
-            // Debug.Log($"rightOpen: {rightOpen}");
-            // Debug.Log($"downOpen: {downOpen}");
-            // Debug.Log($"upOpen: {upOpen}");
+            bool leftOpen = Physics2D.OverlapCircle(left, 0.2f, movementLayer);
+            bool upOpen = Physics2D.OverlapCircle(up, 0.2f, movementLayer);
+            bool rightOpen = Physics2D.OverlapCircle(right, 0.2f, movementLayer);
+            bool downOpen = Physics2D.OverlapCircle(down, 0.2f, movementLayer);
 
             return new IntersectionDirections(leftOpen ? left : Vector3.zero, upOpen ? up : Vector3.zero,
                 rightOpen ? right : Vector3.zero, downOpen ? down : Vector3.zero);
@@ -241,10 +243,10 @@ namespace PacMan.CharacterMovement.Enemy
 
         public IntersectionDirections(Vector3 left, Vector3 up, Vector3 right, Vector3 down)
         {
-            this.Left = left;
-            this.Up = up;
-            this.Right = right;
-            this.Down = down;
+            Left = left;
+            Up = up;
+            Right = right;
+            Down = down;
 
             var corner = left != Vector3.zero && up != Vector3.zero || left != Vector3.zero && down != Vector3.zero ||
                          right != Vector3.zero && up != Vector3.zero || right != Vector3.zero && down != Vector3.zero;
@@ -252,10 +254,11 @@ namespace PacMan.CharacterMovement.Enemy
         }
     }
 
-    public enum MovementMode
+    public enum EnemyType
     {
-        Chase,
-        Scatter,
-        Flee,
+        Aggressive,
+        Pincer,
+        Shy,
+        Whimsical
     }
 }
