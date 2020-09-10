@@ -14,31 +14,32 @@ namespace PacMan.Characters.Enemy.States
         
         public void Tick()
         {
+            _enemy.transform.position = Vector3.MoveTowards(_enemy.transform.position, TargetPosition(), _enemy.moveSpeed * 1.5f);
+            if (ArrivedAtStartPosition)
+            {
+                _enemy.Killed = false;
+                var position = _enemy.startPoint.position;
+                _enemy.transform.position = position;
+                _enemy.movePoint.position = position;
+                _enemy.spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+            }
         }
 
         public bool ArrivedAtStartPosition =>
-            Vector3.Distance(_enemy.movePoint.position, _enemy.startPoint.position) < 1f;
+            Vector3.Distance(_enemy.transform.position, _enemy.startPoint.position) < 0.1f;
 
         public void OnEnter()
         {
+            _enemy.spriteRenderer.color = new Color(1f, 1f, 1f, 0.5f);
         }
 
         public void OnExit()
         {
-            _enemy.Killed = false;
-            var position = _enemy.startPoint.position;
-            _enemy.transform.position = position;
-            _enemy.movePoint.position = position;
         }
 
         public Vector3 TargetPosition()
         {
-            var movePointPosition = _enemy.movePoint.position;
-            var path = Pathfinding.GetPath(Vector3Int.RoundToInt(movePointPosition),
-                Vector3Int.RoundToInt(_enemy.startPoint.position), _enemy.movementLayer,
-                Vector3Int.RoundToInt(_enemy.previousPosition));
-
-            return path.Count > 1 ? path.ElementAt(1) : movePointPosition;
+            return _enemy.startPoint.position;
         }
     }
 }

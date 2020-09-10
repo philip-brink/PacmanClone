@@ -1,32 +1,32 @@
 using System;
 using System.Collections.Generic;
+using PacMan.Characters;
 using PacMan.Characters.Enemy;
 using PacMan.GameStates;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 namespace PacMan
 {
     public class GameController : MonoBehaviour
     {
-        public Tilemap dotTiles;
         public Text score;
         public Text lives;
-        public const string DotName = "dot";
-        public const string PowerDotName = "power_dot";
+        public GameObject failureMenu;
+        public GameObject victoryMenu;
         private StateMachine<IState> _stateMachine;
         private int _score;
-        private int _numberDots;
-        private int _numberDotsConsumed;
-        private bool _playerKilled;
+        [NonSerialized] public bool PlayerKilled;
+        [NonSerialized] public bool ResetGame;
         private int _lives = 3;
         private List<Enemy> _enemies;
+        private Player _player;
+        private DotsController _dotsController;
 
         public void DotCollected()
         {
-            _numberDotsConsumed++;
             IncrementScore(1);
+            AudioController.Instance.Play(SoundEffect.Munch);
         }
 
         public void PowerDotCollected()
@@ -35,8 +35,9 @@ namespace PacMan
             {
                 enemy.Fleeing = true;
             }
-            
+
             IncrementScore(25);
+            AudioController.Instance.Play(SoundEffect.PowerMunch);
         }
 
         public void FruitCollected()
@@ -44,18 +45,62 @@ namespace PacMan
             IncrementScore(200);
         }
 
-        public void EnemyCollision(Enemy enemy)
+        public bool EnemyCollision(Enemy enemy)
         {
+            if (enemy.Killed) return false;
+            
             if (enemy.Fleeing)
             {
-                Debug.Log("CAUGHT GHOST");
+                switch (enemy.enemyType)
+                {
+                    case EnemyType.Aggressive:
+                        Debug.Log("Aggressive killed");
+                        AudioController.Instance.Play(SoundEffect.AggressiveEnemyKilled);
+                        break;
+                    case EnemyType.Pincer:
+                        Debug.Log("Pincer killed");
+                        AudioController.Instance.Play(SoundEffect.PincerEnemyKilled);
+                        break;
+                    case EnemyType.Shy:
+                        Debug.Log("Shy killed");
+                        AudioController.Instance.Play(SoundEffect.ShyEnemyKilled);
+                        break;
+                    case EnemyType.Whimsical:
+                        Debug.Log("Whimsical killed");
+                        AudioController.Instance.Play(SoundEffect.WhimsicalEnemyKilled);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
                 enemy.Killed = true;
+                IncrementScore(400);
+                return false;
             }
             else
             {
-                _playerKilled = true;
+                switch (enemy.enemyType)
+                {
+                    case EnemyType.Aggressive:
+                        AudioController.Instance.Play(SoundEffect.PlayerKilledByAggressive);
+                        break;
+                    case EnemyType.Pincer:
+                        AudioController.Instance.Play(SoundEffect.PlayerKilledByPincer);
+                        break;
+                    case EnemyType.Shy:
+                        AudioController.Instance.Play(SoundEffect.PlayerKilledByShy);
+                        break;
+                    case EnemyType.Whimsical:
+                        AudioController.Instance.Play(SoundEffect.PlayerKilledByWhimsical);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
+                PlayerKilled = true;
                 _lives--;
                 SetLives();
+                return true;
             }
         }
 
@@ -70,12 +115,26 @@ namespace PacMan
             lives.text = $"Lives: {_lives}";
         }
 
+        public void RestartGame()
+        {
+            _lives = 3;
+            SetLives();
+            ResetGame = true;
+            _score = 0;
+            _dotsController.ResetDots();
+            // _player.Reincarnate();
+            foreach (var enemy in _enemies)
+            {
+                enemy.Reset();
+            }
+        }
+
         private void Start()
         {
-            _numberDots = GetTileAmount(DotName);
+            _dotsController = GameObject.Find("Dots").GetComponent<DotsController>();
             
             SetLives();
-            
+
             _enemies = new List<Enemy>
             {
                 GameObject.Find("EnemyAggressive").GetComponent<Enemy>(),
@@ -84,59 +143,39 @@ namespace PacMan
                 GameObject.Find("EnemyWhimsical").GetComponent<Enemy>()
             };
 
+            _player = GameObject.Find("Player").GetComponent<Player>();
+
             _stateMachine = new StateMachine<IState>();
 
 
-            var victorious = new Victorious();
-            var failed = new Failed();
-            var killed = new Killed();
-            var playing = new Playing();
-            
+            var victorious = new Victorious(victoryMenu);
+            var failed = new Failed(failureMenu);
+            var killed = new Killed(_player, this);
+            var playing = new Playing(this);
+
             At(playing, victorious, Victorious());
-            At(playing, failed, Failed());
-            At(playing, killed, PlayerKilled());
+            At(killed, failed, Failed());
+            At(playing, killed, PlayerDied());
+            At(killed, playing, Reincarnate());
+            AtAny(playing, GameRestarted());
 
             _stateMachine.SetState(playing);
 
             void At(IState from, IState to, Func<bool> condition) => _stateMachine.AddTransition(from, to, condition);
-            
-            Func<bool> Victorious() => () => _numberDotsConsumed == _numberDots;
-            Func<bool> Failed() => () => _lives <= 0;
-            Func<bool> PlayerKilled() => () =>
-            {
-                if (_playerKilled)
-                {
-                    _playerKilled = false;
-                    return true;
-                }
-                return false;
-            };
+            void AtAny(IState to, Func<bool> condition) => _stateMachine.AddAnyTransition(to, condition);
+
+            Func<bool> Victorious() => () => _dotsController.AllDotsConsumed;
+            Func<bool> Failed() => () => killed.TimeUp && _lives <= 0;
+            Func<bool> Reincarnate() => () => killed.TimeUp && _lives > 0;
+            Func<bool> PlayerDied() => () => PlayerKilled;
+            Func<bool> GameRestarted() => () => ResetGame;
         }
 
         private void FixedUpdate()
         {
             _stateMachine.Tick();
         }
-        
-        /// <summary> Get the amount of tiles controlled by a player </summary> 
-        private int GetTileAmount(string tileName)
-        {
-            var amount = 0;
- 
-            // loop through all of the tiles        
-            BoundsInt bounds = dotTiles.cellBounds;
-            foreach (Vector3Int pos in bounds.allPositionsWithin)
-            {
-                Tile tile = dotTiles.GetTile<Tile>(pos);
-                if (tile != null)
-                {
-                    if (tile.name == tileName)
-                    {
-                        amount += 1;
-                    }
-                }
-            }
-            return amount;
-        }
+
+
     }
 }

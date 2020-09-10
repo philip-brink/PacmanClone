@@ -19,6 +19,32 @@ namespace PacMan.Characters.Enemy.States
         public void Tick()
         {
             _timeLeft -= Time.deltaTime;
+
+            if (_timeLeft < 0.2)
+            {
+                _enemy.spriteRenderer.color = Color.blue;
+            }
+            else if (_timeLeft < 0.4)
+            {
+                _enemy.spriteRenderer.color = Color.white;
+            }
+            else if (_timeLeft < 0.6)
+            {
+                _enemy.spriteRenderer.color = Color.blue;
+            }
+            else if (_timeLeft < 0.8)
+            {
+                _enemy.spriteRenderer.color = Color.white;
+            }
+            else if (_timeLeft < 1.0)
+            {
+                _enemy.spriteRenderer.color = Color.blue;
+            }
+            else if (_timeLeft < 1.2)
+            {
+                _enemy.spriteRenderer.color = Color.white;
+            }
+            
             if (TimeUp)
             {
                 _enemy.Fleeing = false;
@@ -31,6 +57,7 @@ namespace PacMan.Characters.Enemy.States
         {
             _timeLeft = _fleeingTimes[_roundNumber < _fleeingTimes.Length ? _roundNumber : _fleeingTimes.Length - 1];
             _enemy.spriteRenderer.color = Color.blue;
+            _enemy.ReverseMovement();
         }
 
         public void OnExit()

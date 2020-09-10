@@ -26,6 +26,7 @@ namespace PacMan.Characters.Enemy
         [NonSerialized] public Enemy AggressiveEnemy;
 
         private bool _fleeing;
+
         public bool Fleeing
         {
             get => _fleeing;
@@ -38,7 +39,18 @@ namespace PacMan.Characters.Enemy
             }
         }
 
-        [NonSerialized] public bool Killed;
+        private bool _killed;
+
+        public bool Killed
+        {
+            get => _killed;
+            set
+            {
+                if (value) _fleeing = false;
+                _killed = value;
+            }
+        }
+
         private int _verticalMovement;
         private int _horizontalMovement;
         private int _animatorHorizontalId;
@@ -57,11 +69,20 @@ namespace PacMan.Characters.Enemy
                 return Vector3.zero;
             }
         }
-        
+
+        public void Reset()
+        {
+            var position = startPoint.position;
+            transform.position = position;
+            movePoint.position = position;
+            
+            Start();
+        }
+
         private void Start()
         {
             AggressiveEnemy = GameObject.Find("EnemyAggressive").GetComponent<Enemy>();
-            
+
             // don't have the movePoint as a child of the player itself
             movePoint.parent = null;
             _animatorHorizontalId = Animator.StringToHash("Horizontal");
@@ -79,17 +100,19 @@ namespace PacMan.Characters.Enemy
             At(chasing, scattering, ChaseTimeUp());
             At(scattering, chasing, ScatterTimeUp());
             At(fleeing, chasing, FleeTimeUp());
-            At(killed, waiting, KilledTimeUp());
+            At(killed, waiting, KilledArrivedAtStart());
 
             AtAny(fleeing, EnemyFleeing());
             AtAny(killed, EnemyKilled());
 
             _stateMachine.SetState(waiting);
 
-            void At(IEnemyState from, IEnemyState to, Func<bool> condition) => _stateMachine.AddTransition(from, to, condition);
+            void At(IEnemyState from, IEnemyState to, Func<bool> condition) =>
+                _stateMachine.AddTransition(from, to, condition);
+
             void AtAny(IEnemyState to, Func<bool> condition) => _stateMachine.AddAnyTransition(to, condition);
             Func<bool> WaitTimeUp() => () => waiting.TimeUp;
-            Func<bool> KilledTimeUp() => () => killed.ArrivedAtStartPosition;
+            Func<bool> KilledArrivedAtStart() => () => killed.ArrivedAtStartPosition;
             Func<bool> ChaseTimeUp() => () => chasing.TimeUp;
             Func<bool> ScatterTimeUp() => () => scattering.TimeUp;
             Func<bool> FleeTimeUp() => () => fleeing.TimeUp;
@@ -100,14 +123,13 @@ namespace PacMan.Characters.Enemy
         private void FixedUpdate()
         {
             _stateMachine.Tick();
-            
             MoveEnemy();
         }
 
         private void MoveEnemy()
         {
-            if (_stateMachine.CurrentState is Waiting) return;
-            
+            if (_stateMachine.CurrentState is Waiting || _stateMachine.CurrentState is Killed) return;
+
             if (Vector3.Distance(transform.position, movePoint.position) <= 0.01f)
             {
                 var nextIntersection = CheckForIntersection(movePoint.position);
@@ -226,7 +248,7 @@ namespace PacMan.Characters.Enemy
                 rightOpen ? right : Vector3.zero, downOpen ? down : Vector3.zero);
         }
 
-        private void ReverseMovement()
+        public void ReverseMovement()
         {
             _horizontalMovement *= -1;
             _verticalMovement *= -1;

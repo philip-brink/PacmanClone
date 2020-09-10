@@ -10,6 +10,7 @@ namespace PacMan.Characters
         public float moveSpeed;
         public Transform movePoint;
         public Transform futureMovePoint;
+        public Transform startPoint;
         public LayerMask movementLayer;
         public LayerMask teleportationLayer;
         public Tilemap railTiles;
@@ -25,13 +26,16 @@ namespace PacMan.Characters
         private int _animatorHorizontalId;
         private int _animatorVerticalId;
         private int _animatorMovingId;
+        private int _animatorKilledId;
         private Vector3 _turnStartPosition;
         private bool _movementSet;
         private Vector3Int _lastTileCheckedForDot = Vector3Int.zero;
         private Dictionary<GameObject, Enemy.Enemy> _enemies;
         private float _enemyCollisionDistance = 0.8f;
+        private bool _killed;
 
         private GameController _gameController;
+        private DotsController _dotsController;
 
         private void Start()
         {
@@ -39,12 +43,14 @@ namespace PacMan.Characters
             _animatorHorizontalId = Animator.StringToHash("Horizontal");
             _animatorVerticalId = Animator.StringToHash("Vertical");
             _animatorMovingId = Animator.StringToHash("Moving");
+            _animatorKilledId = Animator.StringToHash("Killed");
             
             // don't have the movePoint as a child of the player itself
             movePoint.parent = null;
             _turnStartPosition = transform.position;
 
-            _gameController = GameObject.Find("Main Camera").GetComponent<GameController>();
+            _gameController = GameObject.Find("GameController").GetComponent<GameController>();
+            _dotsController = GameObject.Find("Dots").GetComponent<DotsController>();
 
             _enemies = new Dictionary<GameObject, Enemy.Enemy>
             {
@@ -58,12 +64,12 @@ namespace PacMan.Characters
         // Update is called once per frame
         private void Update()
         {
-            PlayerMovementInput();
+            if (!_killed) PlayerMovementInput();
         }
 
         private void FixedUpdate()
         {
-            PlayerMovement();
+            if (!_killed) PlayerMovement();
         }
         
         private void SetMovement(float x, float y, bool moving)
@@ -151,6 +157,23 @@ namespace PacMan.Characters
             }
         }
 
+        private void SetKilled()
+        {
+            _killed = true;
+            animator.SetBool(_animatorKilledId, true);
+        }
+        
+        public void Reincarnate()
+        {
+            animator.SetBool(_animatorKilledId, false);
+            SetMovement(0, 0, false);
+            var startPosition = startPoint.position;
+            transform.position = startPosition;
+            movePoint.position = startPosition;
+            futureMovePoint.position = startPosition;
+            _killed = false;
+        }
+
         private void PlayerMovement()
         {
             // Check for any collisions with an enemy
@@ -158,7 +181,7 @@ namespace PacMan.Characters
             {
                 if (Vector3.Distance(transform.position, enemy.Key.transform.position) <= _enemyCollisionDistance)
                 {
-                    _gameController.EnemyCollision(enemy.Value);
+                    if (_gameController.EnemyCollision(enemy.Value)) SetKilled();
                 }
             }
 
@@ -206,21 +229,17 @@ namespace PacMan.Characters
             var positionInt = Vector3Int.RoundToInt(transform.position) - new Vector3Int(1, 1, 0);
             if (positionInt != _lastTileCheckedForDot)
             {
-                if (dotTiles.HasTile(positionInt))
+                var dotConsumed = _dotsController.PlayerMovedToPosition(positionInt);
+                switch (dotConsumed)
                 {
-                    var currentDot = dotTiles.GetTile(positionInt);
-                    if (currentDot.name == GameController.DotName)
-                    {
-                        dotTiles.SetTile(positionInt, null);
+                    case DotType.Normal:
                         _gameController.DotCollected();
-                    }
-                    else if (currentDot.name == GameController.PowerDotName)
-                    {
-                        dotTiles.SetTile(positionInt, null);
+                        break;
+                    case DotType.Power:
                         _gameController.PowerDotCollected();
-                    }
+                        break;
                 }
-
+                
                 _lastTileCheckedForDot = positionInt;
             }
 
