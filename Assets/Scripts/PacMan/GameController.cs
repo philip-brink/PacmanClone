@@ -12,8 +12,6 @@ namespace PacMan
     {
         public Text score;
         public Text lives;
-        public GameObject failureMenu;
-        public GameObject victoryMenu;
         private StateMachine<IState> _stateMachine;
         private int _score;
         [NonSerialized] public bool PlayerKilled;
@@ -22,6 +20,8 @@ namespace PacMan
         private List<Enemy> _enemies;
         private Player _player;
         private DotsController _dotsController;
+
+        public IState CurrentState => _stateMachine.CurrentState; 
 
         public void DotCollected()
         {
@@ -148,8 +148,8 @@ namespace PacMan
             _stateMachine = new StateMachine<IState>();
 
 
-            var victorious = new Victorious(victoryMenu);
-            var failed = new Failed(failureMenu);
+            var victorious = new Victorious();
+            var failed = new Failed();
             var killed = new Killed(_player, this);
             var playing = new Playing(this);
 

@@ -250,6 +250,7 @@ namespace PacMan.Characters.Enemy
 
         public void ReverseMovement()
         {
+            previousPosition = Vector3.zero;
             _horizontalMovement *= -1;
             _verticalMovement *= -1;
         }

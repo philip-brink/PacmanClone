@@ -1,15 +1,15 @@
+using PacMan.Menu;
 using UnityEngine;
 
 namespace PacMan.GameStates
 {
     public class Failed : IState
     {
-        private readonly GameObject _failedMenu;
+        private readonly PauseMenu _pauseMenu;
 
-        public Failed(GameObject failedMenu)
+        public Failed()
         {
-            _failedMenu = failedMenu;
-        }
+            _pauseMenu = GameObject.Find("Canvas").GetComponent<PauseMenu>();        }
         
         public void Tick()
         {
@@ -18,13 +18,12 @@ namespace PacMan.GameStates
 
         public void OnEnter()
         {
-            _failedMenu.SetActive(true);
+            _pauseMenu.OpenFailureMenu();
             AudioController.Instance.PlayMusic(Music.Failure);
         }
 
         public void OnExit()
         {
-            _failedMenu.SetActive(false);
         }
     }
 }

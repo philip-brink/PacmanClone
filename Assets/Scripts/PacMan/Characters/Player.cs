@@ -14,7 +14,6 @@ namespace PacMan.Characters
         public LayerMask movementLayer;
         public LayerMask teleportationLayer;
         public Tilemap railTiles;
-        public Tilemap dotTiles;
         public GameObject aggressiveEnemy;
         public GameObject pincerEnemy;
         public GameObject whimsicalEnemy;
@@ -84,7 +83,7 @@ namespace PacMan.Characters
 
         private void PlayerMovementInput()
         {
-            var playerNearTurnStartPosition = Vector3.Distance(_turnStartPosition, transform.position) <= 0.2f;
+            var playerNearTurnStartPosition = Vector3.Distance(_turnStartPosition, transform.position) <= 0.3f;
             var horizontalInput = Input.GetAxisRaw("Horizontal");
             var verticalInput = Input.GetAxisRaw("Vertical");
             bool pathExists = false;

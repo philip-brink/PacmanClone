@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1022,7 +1022,7 @@ GameObject:
   - component: {fileID: 522673686}
   - component: {fileID: 522673685}
   m_Layer: 5
-  m_Name: Failed
+  m_Name: Victory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5801,7 +5801,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 597744317}
   moveSpeed: 0.12
   initialWaitTime: 10
-  killedWaitTime: 5
+  killedWaitTime: 7
   animator: {fileID: 597744316}
   enemyType: 2
 --- !u!95 &597744316
@@ -5933,7 +5933,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 620565808}
   moveSpeed: 0.12
   initialWaitTime: 5
-  killedWaitTime: 5
+  killedWaitTime: 7
   animator: {fileID: 620565807}
   enemyType: 1
 --- !u!95 &620565807
@@ -19963,7 +19963,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 711218615}
   moveSpeed: 0.12
   initialWaitTime: 15
-  killedWaitTime: 5
+  killedWaitTime: 7
   animator: {fileID: 711218614}
   enemyType: 3
 --- !u!95 &711218614
@@ -20168,6 +20168,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 1340250184}
+  victoryMenu: {fileID: 1828867068}
+  failureMenu: {fileID: 427020106}
+  pauseFirstButton: {fileID: 1795807738}
+  failureFirstButton: {fileID: 1603891207}
+  victoryFirstButton: {fileID: 984633674}
+  player: {fileID: 1750237570}
 --- !u!1 &875656775
 GameObject:
   m_ObjectHideFlags: 0
@@ -20548,7 +20554,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -22683,7 +22689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -23134,7 +23140,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1497624121}
   moveSpeed: 0.12
   initialWaitTime: 2
-  killedWaitTime: 5
+  killedWaitTime: 7
   animator: {fileID: 1497624120}
   enemyType: 0
 --- !u!1 &1542156145
@@ -23353,7 +23359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -23485,7 +23491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -28951,7 +28957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -29043,6 +29049,7 @@ GameObject:
   - component: {fileID: 1750237574}
   - component: {fileID: 1750237571}
   - component: {fileID: 1750237572}
+  - component: {fileID: 1750237573}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -29073,7 +29080,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   railTiles: {fileID: 1645366191}
-  dotTiles: {fileID: 663364261}
   aggressiveEnemy: {fileID: 1497624119}
   pincerEnemy: {fileID: 620565805}
   whimsicalEnemy: {fileID: 711218612}
@@ -29098,6 +29104,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1750237573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750237570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
 --- !u!212 &1750237574
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -29247,7 +29268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -29379,7 +29400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -29897,7 +29918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 1795807738}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1938613183
@@ -30139,8 +30160,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: {fileID: 191663669}
   lives: {fileID: 171456474}
-  failureMenu: {fileID: 427020106}
-  victoryMenu: {fileID: 1828867068}
 --- !u!4 &2118939474
 Transform:
   m_ObjectHideFlags: 0

@@ -1,14 +1,15 @@
+using PacMan.Menu;
 using UnityEngine;
 
 namespace PacMan.GameStates
 {
     public class Victorious : IState
     {
-        private GameObject _victoryMenu;
+        private readonly PauseMenu _pauseMenu;
         
-        public Victorious(GameObject victoryMenu)
+        public Victorious()
         {
-            _victoryMenu = victoryMenu;
+            _pauseMenu = GameObject.Find("Canvas").GetComponent<PauseMenu>();
         }
         
         public void Tick()
@@ -19,13 +20,12 @@ namespace PacMan.GameStates
         public void OnEnter()
         {
             Debug.Log("!!!!!!VICTORY!!!!!");
-            _victoryMenu.SetActive(true);
+            _pauseMenu.OpenVictoryMenu();
             AudioController.Instance.PlayMusic(Music.Victory);
         }
 
         public void OnExit()
         {
-            _victoryMenu.SetActive(false);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace PacMan.Characters.Enemy.States
     {
         private float _timeLeft;
         private int _roundNumber; 
-        private readonly float[] _fleeingTimes = {7f, 7f, 5f, 5f};
+        private readonly float[] _fleeingTimes = {9f, 9f, 7f, 7f};
         private readonly Enemy _enemy;
         private readonly Random _random = new Random();
 
@@ -19,14 +19,10 @@ namespace PacMan.Characters.Enemy.States
         public void Tick()
         {
             _timeLeft -= Time.deltaTime;
-
-            if (_timeLeft < 0.2)
+            
+            if (_timeLeft < 0.4)
             {
-                _enemy.spriteRenderer.color = Color.blue;
-            }
-            else if (_timeLeft < 0.4)
-            {
-                _enemy.spriteRenderer.color = Color.white;
+                _enemy.spriteRenderer.color = Color.red;
             }
             else if (_timeLeft < 0.6)
             {
